@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Explorer: The Plastic Patrol</title>
+    <style>
+        :root {
+            --blue: #00d2ff; --green: #3aed3a; --brown: #8B4513; --gray: #808080;
+        }
+        body { font-family: 'Comic Sans MS', cursive, sans-serif; margin: 0; background: #f0faff; color: #333; }
+        header { background: #0077be; color: white; padding: 2rem; text-align: center; }
+        .container { max-width: 900px; margin: auto; padding: 20px; }
+        
+        /* Interactive Map Section */
+        .sphere-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer; border: 3px solid transparent; }
+        .card:hover { transform: scale(1.05); border-color: var(--blue); }
+        
+        /* The Simulator Tool */
+        #sim-box { background: #fff; padding: 30px; border-radius: 20px; border: 4px dashed #0077be; margin-top: 40px; }
+        input[type=range] { width: 100%; height: 15px; border-radius: 5px; background: #d3d3d3; outline: none; }
+
+        .status-box { display: flex; justify-content: space-around; margin-top: 20px; }
+        .indicator { text-align: center; font-weight: bold; }
+        .score { font-size: 24px; display: block; }
+        
+        .action-list { background: #e2f3e5; padding: 20px; border-radius: 10px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🐧 Eco-Explorer: The Plastic Patrol</h1>
+    <p>Grades 3-5 Special Mission: Saving Earth from Plastic!</p>
+</header>
+
+<div class="container">
+    
+    <!-- Section 1: The Problem -->
+    <section>
+        <h2>🕵️‍♂️ The Mystery: Where does plastic come from?</h2>
+        <p>Most plastic is made from <b>Oil</b> (yucky fossils underground). We use it for 5 minutes, but it stays on Earth for <b>500 years!</b> That is longer than your great-great-great-great-grandparents!</p>
+    </section>
+
+    <!-- Section 2: The Four Spheres Interactive -->
+    <section>
+        <h2>🌍 Click to See the Damage to Earth's Spheres</h2>
+        <div class="sphere-grid">
+            <div class="card" onclick="showInfo('hydro')">
+                <h3>💧 Hydrosphere (Water)</h3>
+                <p>The Ocean "Soup"</p>
+            </div>
+            <div class="card" onclick="showInfo('bio')">
+                <h3>🐢 Biosphere (Life)</h3>
+                <p>Animals in Danger</p>
+            </div>
+            <div class="card" onclick="showInfo('geo')">
+                <h3>🌱 Geosphere (Land)</h3>
+                <p>Dirty Soil</p>
+            </div>
+            <div class="card" onclick="showInfo('atmo')">
+                <h3>☁️ Atmosphere (Air)</h3>
+                <p>Invisible Gasses</p>
+            </div>
+        </div>
+
+        <div id="info-display" class="card hidden" style="margin-top:20px; background: #fffbe6;">
+            <h4 id="info-title"></h4>
+            <p id="info-text"></p>
+        </div>
+    </section>
+
+    <!-- Section 3: The Responsibility Simulator -->
+    <section id="sim-box">
+        <h2>🎮 The "Plastic Footprint" Simulator</h2>
+        <p>If your family uses this many plastic bags/bottles per week...</p>
+        <input type="range" id="plasticInput" min="0" max="100" value="10" oninput="updateSim(this.value)">
+        <p><b>Your Usage: <span id="bagCount">10</span> items per week</b></p>
+        
+        <div class="status-box">
+            <div class="indicator">🌊 Ocean Health<span class="score" id="s1">90%</span></div>
+            <div class="indicator">🦁 Animal Safety<span class="score" id="s2">90%</span></div>
+            <div class="indicator">🌳 Soil Quality<span class="score" id="s3">90%</span></div>
+        </div>
+        <p id="feedback" style="text-align:center; font-style:italic; margin-top:15px; color: #d35400;"></p>
+    </section>
+
+    <!-- Section 4: Call to Action -->
+    <section>
+        <h2>🚀 Your Secret Mission: Further Actions</h2>
+        <div class="action-list">
+            <ul>
+                <li><b>Refuse:</b> Say "No straw, please!" at the restaurant.</li>
+                <li><b>Reuse:</b> Use a cool metal bottle instead of plastic ones.</li>
+                <li><b>Educate:</b> Tell your parents that plastic is made from oil!</li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<script>
+    function showInfo(sphere) {
+        const display = document.getElementById('info-display');
+        const title = document.getElementById('info-title');
+        const text = document.getElementById('info-text');
+        display.classList.remove('hidden');
+
+        const content = {
+            'hydro': ["The Hydrosphere", "Millions of tons of plastic float in the ocean. Fish mistake 'micro-plastics' for food. This makes the water toxic for everything that drinks it!"],
+            'bio': ["The Biosphere", "Sea turtles think plastic bags are jellyfish (their favorite snack). When they eat them, they get very sick. We are part of this sphere too!"],
+            'geo': ["The Geosphere", "Plastic in landfills leaks chemicals into the ground. This stops plants from growing healthy and pollutes our soil."],
+            'atmo': ["The Atmosphere", "When people burn plastic trash, it releases black smoke and toxic chemicals into the air, making it harder for us to breathe."]
+        };
+
+        title.innerText = content[sphere][0];
+        text.innerText = content[sphere][1];
+    }
+
+    function updateSim(val) {
+        document.getElementById('bagCount').innerText = val;
+        let health = 100 - val;
+        document.getElementById('s1').innerText = health + "%";
+        document.getElementById('s2').innerText = (health - 5) + "%";
+        document.getElementById('s3').innerText = (health + 2) + "%";
+
+        let msg = "";
+        if(val < 10) msg = "Excellent! You are a Planet Hero! 🌟";
+        else if(val < 40) msg = "Not bad, but we can do better! 🐧";
+        else msg = "Oh no! The Earth is struggling. Time to reduce! ⚠️";
+        document.getElementById('feedback').innerText = msg;
+    }
+</script>
+
+</body>
+</html>
